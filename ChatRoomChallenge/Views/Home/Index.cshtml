@@ -1,28 +1,40 @@
 ﻿@model Entities.AppUser
 @using Entities
+@{
+    Layout = "_Layout";
+}
 
+<style>
+    .message {
+        display: block;
+        border: 1px solid #b3b3b3;
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px;
+    }
+</style>
 <div class="container">
     <div class="row">&nbsp;</div>
     <div class="row" style="display:none">
         <div class="col-2">User</div>
         <div class="col-4"><input type="text" id="userInput" asp-for="Name" /></div>
     </div>
-    <div class="row">
+    <div class="form-group col-sm-6">
         <div class="col-2">Send To</div>
-        <div class="col-4">
-            <select id="users">
+        <div class="col-6">
+            <select id="users" class="form-control">
                 <option value="0">All</option>
             </select>
         </div>
     </div>
-    <div class="row">
+    <div class="form-group col-sm-6">
         <div class="col-2">Message</div>
-        <div class="col-4"><input type="text" id="messageInput" /></div>
+        <div class="col-12"><textarea class="form-control" type="text" id="messageInput"></textarea></div>
     </div>
     <div class="row">&nbsp;</div>
     <div class="row">
         <div class="col-6">
-            <input type="button" id="sendButton" value="Send Message" />
+            <input type="button" class="btn btn-primary" id="sendButton" value="Send Message" />
         </div>
     </div>
 </div>
@@ -36,7 +48,7 @@
         <ul>
             @foreach (Message item in ViewBag.MessageHIstory)
             {
-                <li>@item.User says @item.MessageStrin</li>
+                <li class="message">@item.User says @item.MessageStrin</li>
             }
         </ul>
         <ul id="messagesList"></ul>
@@ -44,3 +56,4 @@
 </div>
 <script src="~/js/signalr/dist/browser/signalr.js"></script>
 <script src="~/js/chat.js"></script>
+<link rel="stylesheet" href="~/css/site.css" type="text/css" />

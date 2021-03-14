@@ -149,6 +149,8 @@ namespace ChatRoomChallenge.Controllers
                 }
             }
 
+            ViewBag.Erros = result.Errors.Select(x => x.Description).ToList();
+
             return View();
         }
 
