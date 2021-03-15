@@ -9,12 +9,15 @@ using ChatRoomChallenge.Models;
 using ChatTask.Hubs;
 using Entities;
 using Events;
+using LinqToDB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -40,17 +43,41 @@ namespace ChatRoomChallenge
 
             services.Configure<StockSettings>(Configuration.GetSection("StockService"));
 
-            services.AddDbContext<ApplicationDbContext>(config =>
-            {
-                // for in memory database  
-                config.UseInMemoryDatabase("MemoryBaseDataBase");
-            });
+            var dbtype = Configuration.GetSection("dbType");
 
-            services.AddDbContext<ChatDbContext>(config =>
+            switch (dbtype.Value)
             {
-                // for in memory database  
-                config.UseInMemoryDatabase("ChatMemoryBaseDataBase");
-            });
+                case "MEM":
+                    services.AddDbContext<ApplicationDbContext>(config =>
+                    {
+                        config.UseInMemoryDatabase("IdentiydataBase");
+                    });
+
+                    services.AddDbContext<ChatDbContext>(config =>
+                    {
+                        config.UseInMemoryDatabase("MemoryBaseDataBase");
+                    });
+                    break;
+                case "DB":
+                    services.AddDbContext<ApplicationDbContext>(config =>
+                    {
+                        config.UseMySql(Configuration.GetConnectionString("dbConn"), builder =>
+                        {
+                            builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+                        });
+                    });
+
+                    services.AddDbContext<ChatDbContext>(config =>
+                    {
+                        config.UseMySql(Configuration.GetConnectionString("dbConn"), builder =>
+                        {
+                            builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+                        });
+
+                    });
+                    break;
+            }
+
 
             services.AddIdentity<AppUser, IdentityRole>(config =>
             {
@@ -81,9 +108,39 @@ namespace ChatRoomChallenge
             services.AddSignalR();
         }
 
+        private static void UpdateDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<ChatDbContext>();
+                context.Database.EnsureDeleted();
+                context.Database.EnsureCreated();
+            }
+        }
+
+        private static void UpdateIdentityDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                try
+                {
+
+                    var context = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                    RelationalDatabaseCreator databaseCreator = (RelationalDatabaseCreator)context.Database.GetService<IDatabaseCreator>();
+                    databaseCreator.CreateTables(); 
+                    var context2 = serviceScope.ServiceProvider.GetRequiredService<ChatDbContext>();
+                    databaseCreator = (RelationalDatabaseCreator)context2.Database.GetService<IDatabaseCreator>();
+                    databaseCreator.CreateTables();
+                }
+                catch (Exception){}
+            }
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            UpdateIdentityDatabase(app);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
