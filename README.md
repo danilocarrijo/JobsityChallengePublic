@@ -6,15 +6,19 @@ So that the system works correctly and with 100% of its functionality. It is ass
 ## How to run it
 
 ### Running the exe
+
 Along with the challenge completion email, a folder containing two exes will be sent:
 
 The first in the bot folder will run the chatbot, which is needed to search for stock quotes. You can change the port he will use in appsettings.json, tag Urls
+
 ```json
 
 {
   ...
   "Urls": "http://localhost:5050"
 }
+
+```
 
 The second in the chat folder, will run the system itself.
     
