@@ -3,8 +3,12 @@ using Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Options;
 using ServicesInterface;
 using System;
+using System.IO;
+using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ChatTask.Hubs
@@ -12,8 +16,6 @@ namespace ChatTask.Hubs
     [Authorize]
     public class ChatHub : Hub
     {
-        
-
         public enum Events
         {
             MESSAGE = 0,
@@ -22,14 +24,14 @@ namespace ChatTask.Hubs
         }
         private readonly IMessageService _messageService;
 
-        private readonly IStockService _stockService;
+        private readonly BotSettings _options;
 
         public ChatHub(
-                   IMessageService messageService,
-                   IStockService stockService)
+                   IOptions<BotSettings> options,
+                   IMessageService messageService)
         {
             _messageService = messageService;
-            _stockService = stockService;
+            _options = options.Value;
         }
 
         public override Task OnConnectedAsync()
@@ -60,7 +62,8 @@ namespace ChatTask.Hubs
             {
                 try
                 {
-                    BotMessage(user, message);
+                    await BotMessage(user, message);                    
+                    await Clients.Client(UserHandler._connections.GetConnection(user)).SendAsync("ReceiveMessage", "Bot", "Message sent to Bot", Events.MESSAGE);
                 }
                 catch (Exception ex)
                 {
@@ -76,8 +79,6 @@ namespace ChatTask.Hubs
                     MessageDateMessage = DateTime.Now
                 });
 
-
-
                 if (who.Equals("0"))
                     await Clients.All.SendAsync("ReceiveMessage", user, message, Events.MESSAGE);
                 else
@@ -86,15 +87,23 @@ namespace ChatTask.Hubs
 
         }
 
-        public void BotMessage(string user, string message)
+        public async Task BotMessage(string user, string message)
         {
-            var mes = message.Split("=");
-
-            _ = (mes[0]) switch
+            try
             {
-                "/stock" => Task.Run(() => _stockService.GetStockValue(user, mes[1])),
-                _ => throw new Exception("Command not found"),
-            };
+                var request = WebRequest.CreateHttp($"{_options.Url}/bot/{user}/{message.Replace("/","")}");
+                request.Method = "POST";
+                request.ContentType = "application/json";
+                var resposta = request.GetResponse();
+                
+            }
+            catch (WebException ex)
+            {
+                var response = ex.Response.GetResponseStream();
+                StreamReader reader = new StreamReader(response);
+                object objResponse = reader.ReadToEnd();
+                await Clients.Client(UserHandler._connections.GetConnection(user)).SendAsync("ReceiveMessage", "bot", objResponse, Events.MESSAGE);
+            }
         }
 
         public string GetConnectionId() => Context.ConnectionId;

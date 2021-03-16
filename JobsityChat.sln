@@ -5,17 +5,19 @@ VisualStudioVersion = 16.0.29709.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatRoomChallenge", "ChatRoomChallenge\ChatRoomChallenge.csproj", "{C99AE375-13C2-4B05-9D27-64C01FCE13B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryInterface", "Repository.Interface\RepositoryInterface.csproj", "{45C9F512-3651-4388-9666-4BF1BF6E5560}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryInterface", "Repository.Interface\RepositoryInterface.csproj", "{45C9F512-3651-4388-9666-4BF1BF6E5560}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "Repository\Repository.csproj", "{D26E89BB-2B73-402B-9C03-29441E94A441}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "Repository\Repository.csproj", "{D26E89BB-2B73-402B-9C03-29441E94A441}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{0223D579-DAA1-4EDA-8E47-7A20D4AD676D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{0223D579-DAA1-4EDA-8E47-7A20D4AD676D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{2DEB550A-DE2A-4686-9688-9FE8EDD30A29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Services.csproj", "{2DEB550A-DE2A-4686-9688-9FE8EDD30A29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicesInterface", "ServicesInterface\ServicesInterface.csproj", "{B0E35EA2-FC48-46DB-952D-5D3242FB0727}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServicesInterface", "ServicesInterface\ServicesInterface.csproj", "{B0E35EA2-FC48-46DB-952D-5D3242FB0727}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatRoomTests", "ChatRoomTests\ChatRoomTests.csproj", "{D7F82A6D-61F0-4931-8838-01B53CAB3BAB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatRoomTests", "ChatRoomTests\ChatRoomTests.csproj", "{D7F82A6D-61F0-4931-8838-01B53CAB3BAB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChatBot", "ChatBot\ChatBot.csproj", "{643D1006-BDE4-4E4E-A5BC-57674FD7266F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{D7F82A6D-61F0-4931-8838-01B53CAB3BAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7F82A6D-61F0-4931-8838-01B53CAB3BAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7F82A6D-61F0-4931-8838-01B53CAB3BAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{643D1006-BDE4-4E4E-A5BC-57674FD7266F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{643D1006-BDE4-4E4E-A5BC-57674FD7266F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{643D1006-BDE4-4E4E-A5BC-57674FD7266F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{643D1006-BDE4-4E4E-A5BC-57674FD7266F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -41,7 +41,8 @@ namespace ChatRoomChallenge
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.Configure<StockSettings>(Configuration.GetSection("StockService"));
+            
+            services.Configure<BotSettings>(Configuration.GetSection("BotSettings"));
 
             var dbtype = Configuration.GetSection("dbType");
 
@@ -100,8 +101,6 @@ namespace ChatRoomChallenge
 
             services.AddSingleton<EventDispacher>();
             services.AddSingleton<IChatCenterController, ChatCenterController>();
-            services.AddSingleton<IStockService, StockService>();
-            services.AddTransient<PostRabbitMQHostedService>();
             services.AddTransient<IMessageService>(x => new MessageService( x.GetService<ChatDbContext>() ));
             services.AddControllersWithViews();
             services.AddHostedService<ConsumeRabbitMQHostedService>();
